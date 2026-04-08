@@ -2,9 +2,9 @@
 
 > Automated Task Management System for OpenClaw / OpenClaw 自動化任務管理系統
 
-[![CI](https://github.com/venturet/openclaw-task-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/venturet/openclaw-task-manager/actions/workflows/ci.yml)
-[![Release](https://github.com/venturet/openclaw-task-manager/actions/workflows/release.yml/badge.svg)](https://github.com/venturet/openclaw-task-manager/actions/workflows/release.yml)
-[![NPM Version](https://img.shields.io/npm/v/@venturet/openclaw-task-manager)](https://www.npmjs.com/package/@venturet/openclaw-task-manager)
+[![CI](https://github.com/VTC-HQ/openclaw-task-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/VTC-HQ/openclaw-task-manager/actions/workflows/ci.yml)
+[![Release](https://github.com/VTC-HQ/openclaw-task-manager/actions/workflows/release.yml/badge.svg)](https://github.com/VTC-HQ/openclaw-task-manager/actions/workflows/release.yml)
+[![NPM Version](https://img.shields.io/npm/v/@VTC-HQ/openclaw-task-manager)](https://www.npmjs.com/package/@VTC-HQ/openclaw-task-manager)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 [English](#english) | [中文](#中文)
@@ -29,7 +29,7 @@
 
 ```bash
 # Install via NPM
-npm install -g @venturet/openclaw-task-manager
+npm install -g @VTC-HQ/openclaw-task-manager
 
 # Or use directly
 openclaw-task create --template news-monitor --name "Bitcoin News" --schedule "0 */4 * * *"
@@ -73,7 +73,7 @@ openclaw-task compact <task-id>
 
 ```bash
 # Clone
-git clone https://github.com/venturet/openclaw-task-manager.git
+git clone https://github.com/VTC-HQ/openclaw-task-manager.git
 cd openclaw-task-manager
 
 # Install
@@ -115,7 +115,7 @@ npm publish --access public
 ### 安裝
 
 ```bash
-npm install -g @venturet/openclaw-task-manager
+npm install -g @VTC-HQ/openclaw-task-manager
 ```
 
 ### CLI 使用
@@ -148,7 +148,7 @@ openclaw-task compact <任務-ID>
 
 ```bash
 # 克隆
-git clone https://github.com/venturet/openclaw-task-manager.git
+git clone https://github.com/VTC-HQ/openclaw-task-manager.git
 cd openclaw-task-manager
 
 # 安裝依賴
