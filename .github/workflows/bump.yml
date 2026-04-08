@@ -1,0 +1,69 @@
+name: Bump Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
+      prerelease-id:
+        description: 'Prerelease id (e.g., beta, alpha, rc)'
+        required: false
+        default: 'beta'
+        type: string
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Bump version
+        id: version
+        run: |
+          if [ "${{ github.event.inputs.version }}" == "prerelease" ]; then
+            npm version ${{ github.event.inputs.version }}-${{ github.event.inputs.prerelease-id }} --no-git-tag-version
+          else
+            npm version ${{ github.event.inputs.version }} --no-git-tag-version
+          fi
+          echo "VERSION=$(npm pkg get version | tr -d '"')" >> $GITHUB_OUTPUT
+      
+      - name: Create commit and tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "chore: bump version to v${{ steps.version.outputs.VERSION }}"
+          git tag "v${{ steps.version.outputs.VERSION }}"
+          git push
+          git push --tags
+      
+      - name: Create PR
+        if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: bump version to v${{ steps.version.outputs.VERSION }}"
+          title: "chore: Release v${{ steps.version.outputs.VERSION }}"
+          labels: "release"

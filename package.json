@@ -12,10 +12,12 @@
     "prepublish": "npm run build",
     "clean": "rm -rf dist",
     "test": "node dist/cli/task.js list",
+    "test:full": "node dist/cli/task.js stats && node dist/cli/task.js list",
     "lint": "prettier --check \"src/**/*.ts\" \"*.json\" \"*.md\" || true",
     "format": "prettier --write \"src/**/*.ts\" \"*.json\" \"*.md\"",
-    "version": "npm run build && git add -A && git commit -m \"chore: build for release\" || true",
-    "postversion": "git push && git push --tags"
+    "version:bump": "npm version",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "postinstall": "npm run test:full"
   },
   "keywords": [
     "openclaw",
