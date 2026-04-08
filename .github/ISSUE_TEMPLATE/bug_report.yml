@@ -1,0 +1,69 @@
+name: Bug Report
+description: Report a bug / 報告 Bug
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Description / Bug 描述
+        
+  - type: textarea
+    id: description
+    attributes:
+      label: Description / 描述
+      placeholder: Describe the bug / 描述這個 Bug
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Steps to Reproduce / 重現步驟
+        
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps / 步驟
+      placeholder: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Expected Behavior / 預期行為
+        
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected / 預期
+      placeholder: What you expected to happen / 你預期發生什麼
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Actual Behavior / 實際行為
+        
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual / 實際
+      placeholder: What actually happened / 實際發生了什麼
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Environment / 環境
+        
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / 環境
+      placeholder: |
+        - OpenClaw version: 
+        - Node version: 
+        - OS: 
+        - Package version: 

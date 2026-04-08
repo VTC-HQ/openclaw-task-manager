@@ -1,6 +1,11 @@
 # OpenClaw Task Manager Plugin
 
-> Automation Task Management System for OpenClaw / OpenClaw 自動化任務管理系統
+> Automated Task Management System for OpenClaw / OpenClaw 自動化任務管理系統
+
+[![CI](https://github.com/venturet/openclaw-task-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/venturet/openclaw-task-manager/actions/workflows/ci.yml)
+[![Release](https://github.com/venturet/openclaw-task-manager/actions/workflows/release.yml/badge.svg)](https://github.com/venturet/openclaw-task-manager/actions/workflows/release.yml)
+[![NPM Version](https://img.shields.io/npm/v/@venturet/openclaw-task-manager)](https://www.npmjs.com/package/@venturet/openclaw-task-manager)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 [English](#english) | [中文](#中文)
 
@@ -10,27 +15,31 @@
 
 ### Features
 
-- **Template System**: Pre-built templates for common tasks (News Monitor, System Health, Daily Brief)
+- **Template System**: Pre-built templates for common tasks
+  - `news-monitor`: News monitoring
+  - `system-health`: System health checks
+  - `daily-brief`: Daily briefing generation
 - **Thinking Notes**: Each task maintains a thinking notes file for continuous context
-- **State Machine**: Tasks track their own state (created → scheduled → running → paused/completed/failed)
+- **State Machine**: Tasks track their own state
 - **Note Compression**: Automatic compaction when notes exceed 15KB
 - **Bilingual**: Full support for English and Chinese
+- **CI/CD**: Automated testing, building, and publishing
 
 ### Installation
 
 ```bash
-# Install from NPM
-openclaw plugins install openclaw-task-manager
+# Install via NPM
+npm install -g @venturet/openclaw-task-manager
 
-# Or manually
-npm install -g openclaw-task-manager
+# Or use directly
+openclaw-task create --template news-monitor --name "Bitcoin News" --schedule "0 */4 * * *"
 ```
 
 ### CLI Usage
 
 ```bash
 # Create task
-openclaw-task create --template news-monitor --name "Bitcoin News" --schedule "0 */4 * * *"
+openclaw-task create --template <tmpl> --name <name> --schedule <cron> [--agent <agent>]
 
 # List tasks
 openclaw-task list
@@ -52,34 +61,22 @@ openclaw-task delete <task-id> [--force]
 openclaw-task compact <task-id>
 ```
 
-### Available Templates
+### Templates
 
 | Template | Description | Default Schedule |
-|----------|-------------|------------------|
-| `news-monitor` | Monitor news for specific topics | Every 4 hours |
-| `system-health` | System health check and monitoring | Every 15 minutes |
-| `daily-brief` | Generate daily briefing reports | Daily at 8:00 AM |
-
-### Task Structure
-
-```
-~/.openclaw/workspace/tasks/
-├── templates/                    # Task templates
-│   ├── news-monitor/
-│   ├── system-health/
-│   └── daily-brief/
-└── instances/                   # Task instances
-    └── <task-id>/
-        ├── config.json          # Task configuration
-        ├── 思考筆記.md          # Thinking notes
-        ├── prompt.md            # Execution prompt
-        └── history/            # Compacted notes backup
-```
+|----------|-------------|-----------------|
+| `news-monitor` | Monitor news for topics | Every 4 hours |
+| `system-health` | System health checks | Every 15 minutes |
+| `daily-brief` | Generate daily briefs | Daily at 8 AM |
 
 ### Development
 
 ```bash
-# Install dependencies
+# Clone
+git clone https://github.com/venturet/openclaw-task-manager.git
+cd openclaw-task-manager
+
+# Install
 npm install
 
 # Build
@@ -89,18 +86,14 @@ npm run build
 npm test
 ```
 
-### Publishing
+### Release Workflow
 
 ```bash
-# Login to NPM
-npm login
-
-# Publish
+# Trigger release workflow (patch/minor/major)
+# Or manually:
+npm version patch
+git push --tags
 npm publish --access public
-
-# Tag release
-git tag v1.0.0
-git push origin v1.0.0
 ```
 
 ---
@@ -109,20 +102,20 @@ git push origin v1.0.0
 
 ### 功能特點
 
-- **模板系統**：預設模板（新聞監控、系統健康、每日簡報）
-- **思考筆記**：每個任務維護思考筆記檔案，保持上下文連續
-- **狀態機**：任務追蹤自己的狀態（created → scheduled → running → paused/completed/failed）
-- **筆記壓縮**：筆記超過 15KB 時自動壓縮
-- **雙語支援**：完整支援英文和中文
+- **模板系統**：預設模板
+  - `news-monitor`：新聞監控
+  - `system-health`：系統健康檢查
+  - `daily-brief`：每日簡報
+- **思考筆記**：保持上下文連續
+- **狀態機**：任務狀態追蹤
+- **筆記壓縮**：超過 15KB 自動壓縮
+- **雙語支援**：英文和中文
+- **CI/CD**：自動化測試、構建、發布
 
 ### 安裝
 
 ```bash
-# 從 NPM 安裝
-openclaw plugins install openclaw-task-manager
-
-# 或手動
-npm install -g openclaw-task-manager
+npm install -g @venturet/openclaw-task-manager
 ```
 
 ### CLI 使用
@@ -151,59 +144,59 @@ openclaw-task delete <任務-ID> [--force]
 openclaw-task compact <任務-ID>
 ```
 
-### 可用模板
-
-| 模板 | 說明 | 預設排程 |
-|------|------|---------|
-| `news-monitor` | 監控特定主題的新聞 | 每 4 小時 |
-| `system-health` | 系統健康檢查和監控 | 每 15 分鐘 |
-| `daily-brief` | 生成每日簡報報告 | 每天早上 8:00 |
-
-### 任務結構
-
-```
-~/.openclaw/workspace/tasks/
-├── templates/                    # 任務模板
-│   ├── news-monitor/
-│   ├── system-health/
-│   └── daily-brief/
-└── instances/                   # 任務實例
-    └── <任務-ID>/
-        ├── config.json          # 任務配置
-        ├── 思考筆記.md          # 思考筆記
-        ├── prompt.md            # 執行 prompt
-        └── history/            # 壓縮後的舊筆記備份
-```
-
 ### 開發
 
 ```bash
+# 克隆
+git clone https://github.com/venturet/openclaw-task-manager.git
+cd openclaw-task-manager
+
 # 安裝依賴
 npm install
 
-# 編譯
+# 構建
 npm run build
 
 # 測試
 npm test
 ```
 
-### 發布
+### 發布流程
 
 ```bash
-# 登入 NPM
-npm login
-
-# 發布
+# 觸發 release workflow (patch/minor/major)
+# 或手動：
+npm version patch
+git push --tags
 npm publish --access public
-
-# 標籤版本
-git tag v1.0.0
-git push origin v1.0.0
 ```
+
+---
+
+## CI/CD Pipeline
+
+### GitHub Actions Workflows
+
+| Workflow | Trigger | Description |
+|----------|---------|-------------|
+| `CI` | Push/PR | Run tests, lint, build |
+| `Release` | Manual/Tag | Publish to NPM |
+| `Maintenance` | Daily | Check updates, backup |
+
+### Secrets Required
+
+- `NPM_TOKEN`: NPM access token with publish permission
+
+### Automatic Updates
+
+The `Maintenance` workflow runs daily to:
+1. Check for outdated dependencies
+2. Create PR for updates
+3. Backup repository
+4. Verify build health
 
 ---
 
 ## License / 許可證
 
-MIT
+MIT License - see [LICENSE](LICENSE) file for details.

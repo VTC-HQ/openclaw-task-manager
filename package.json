@@ -10,7 +10,12 @@
   "scripts": {
     "build": "tsc",
     "prepublish": "npm run build",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "node dist/cli/task.js list",
+    "lint": "prettier --check \"src/**/*.ts\" \"*.json\" \"*.md\" || true",
+    "format": "prettier --write \"src/**/*.ts\" \"*.json\" \"*.md\"",
+    "version": "npm run build && git add -A && git commit -m \"chore: build for release\" || true",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "openclaw",
