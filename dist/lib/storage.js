@@ -1,7 +1,4 @@
 "use strict";
-/**
- * Task Storage Module / 任務存儲模組
- */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -41,24 +38,17 @@ const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const uuid_1 = require("uuid");
 class TaskStorage {
-    constructor(tasksDir = path.join(process.env.HOME, ".openclaw", "workspace", "tasks"), templatesDir = path.join(__dirname, "..", "templates")) {
+    constructor(tasksDir = path.join(process.env.HOME || "", ".openclaw", "workspace", "tasks"), templatesDir = path.join(__dirname, "..", "templates")) {
         this.tasksDir = tasksDir;
         this.templatesDir = templatesDir;
         this.ensureDirs();
     }
     ensureDirs() {
-        fs.mkdirSync(path.join(this.tasksDir, "templates"), { recursive: true });
         fs.mkdirSync(path.join(this.tasksDir, "instances"), { recursive: true });
     }
-    /**
-     * Generate unique task ID / 生成唯一任務 ID
-     */
     generateTaskId() {
         return `task_${Date.now()}_${(0, uuid_1.v4)().split("-")[0]}`;
     }
-    /**
-     * Get all task instances / 獲取所有任務實例
-     */
     getAllTasks() {
         const instancesDir = path.join(this.tasksDir, "instances");
         if (!fs.existsSync(instancesDir))
@@ -69,19 +59,13 @@ class TaskStorage {
             const configPath = path.join(instancesDir, dir, "config.json");
             if (fs.existsSync(configPath)) {
                 try {
-                    const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-                    tasks.push(config);
+                    tasks.push(JSON.parse(fs.readFileSync(configPath, "utf-8")));
                 }
-                catch (e) {
-                    // Skip invalid configs
-                }
+                catch { }
             }
         }
         return tasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     }
-    /**
-     * Get task by ID / 根據 ID 獲取任務
-     */
     getTask(taskId) {
         const configPath = path.join(this.tasksDir, "instances", taskId, "config.json");
         if (!fs.existsSync(configPath))
@@ -93,9 +77,6 @@ class TaskStorage {
             return null;
         }
     }
-    /**
-     * Create new task / 創建新任務
-     */
     createTask(template, name, schedule, agent = "main") {
         const taskId = this.generateTaskId();
         const instanceDir = path.join(this.tasksDir, "instances", taskId);
@@ -103,82 +84,32 @@ class TaskStorage {
         fs.mkdirSync(path.join(instanceDir, "history"), { recursive: true });
         const now = new Date().toISOString();
         const config = {
-            taskId,
-            template,
-            name,
-            status: "created",
-            cronJobId: "",
-            agent,
-            schedule,
-            createdAt: now,
-            updatedAt: now,
-            notesSize: 0,
-            state: {
-                phase: "initialized",
-                lastRun: null,
-                lastResult: null,
-                runCount: 0,
-                consecutiveFailures: 0,
-            },
+            taskId, template, name, status: "created", cronJobId: "", agent, schedule,
+            createdAt: now, updatedAt: now, notesSize: 0,
+            state: { phase: "initialized", lastRun: null, lastResult: null, runCount: 0, consecutiveFailures: 0 },
         };
-        // Write config
         fs.writeFileSync(path.join(instanceDir, "config.json"), JSON.stringify(config, null, 2));
-        // Copy template files
         const templateDir = path.join(this.templatesDir, template);
         if (fs.existsSync(templateDir)) {
-            const templateConfig = path.join(templateDir, "config.json");
-            if (fs.existsSync(templateConfig)) {
-                // Already in config
-            }
             const rulesFile = path.join(templateDir, "rules.md");
-            if (fs.existsSync(rulesFile)) {
+            if (fs.existsSync(rulesFile))
                 fs.copyFileSync(rulesFile, path.join(instanceDir, "rules.md"));
-            }
             const promptFile = path.join(templateDir, "prompt_template.md");
-            if (fs.existsSync(promptFile)) {
+            if (fs.existsSync(promptFile))
                 fs.copyFileSync(promptFile, path.join(instanceDir, "prompt.md"));
-            }
         }
-        // Create initial thinking notes
-        const notesContent = `# 任務：${name}
-# Task ID: ${taskId}
-# 建立時間 / Created: ${now}
-
-## 任務目標 / Task Goal
-初始化中... / Initializing...
-
-## 初始化日誌 / Initialization Log
-- ${now}: 任務建立 / Task created
-- 模板 / Template: ${template}
-- 排程 / Schedule: ${schedule}
-- 代理 / Agent: ${agent}
-
----
-
-（每次執行後在此處記錄推進內容 / Record progress after each execution）
-`;
-        fs.writeFileSync(path.join(instanceDir, "思考筆記.md"), notesContent, "utf8");
+        const notesContent = `# Task: ${name}\n# ID: ${taskId}\n# Created: ${now}\n\n## Goal\nInitializing...\n\n## Log\n- ${now}: Task created\n- Template: ${template}\n\n---\n(Record progress after each execution)\n`;
+        fs.writeFileSync(path.join(instanceDir, "思考筆記.md"), notesContent);
         return config;
     }
-    /**
-     * Update task / 更新任務
-     */
     updateTask(taskId, updates) {
         const task = this.getTask(taskId);
         if (!task)
             return null;
-        const updated = {
-            ...task,
-            ...updates,
-            taskId: task.taskId, // Prevent ID change
-            updatedAt: new Date().toISOString(),
-        };
+        const updated = { ...task, ...updates, taskId: task.taskId, updatedAt: new Date().toISOString() };
         fs.writeFileSync(path.join(this.tasksDir, "instances", taskId, "config.json"), JSON.stringify(updated, null, 2));
         return updated;
     }
-    /**
-     * Delete task / 刪除任務
-     */
     deleteTask(taskId) {
         const instanceDir = path.join(this.tasksDir, "instances", taskId);
         if (!fs.existsSync(instanceDir))
@@ -186,35 +117,19 @@ class TaskStorage {
         fs.rmSync(instanceDir, { recursive: true, force: true });
         return true;
     }
-    /**
-     * Get notes file path / 獲取筆記檔案路徑
-     */
     getNotesPath(taskId) {
         return path.join(this.tasksDir, "instances", taskId, "思考筆記.md");
     }
-    /**
-     * Get prompt file path / 獲取 prompt 檔案路徑
-     */
     getPromptPath(taskId) {
         return path.join(this.tasksDir, "instances", taskId, "prompt.md");
     }
-    /**
-     * Read notes / 讀取筆記
-     */
     readNotes(taskId, lines) {
         const notesPath = this.getNotesPath(taskId);
         if (!fs.existsSync(notesPath))
             return null;
-        if (lines) {
-            const content = fs.readFileSync(notesPath, "utf-8");
-            const allLines = content.split("\n");
-            return allLines.slice(0, lines).join("\n");
-        }
-        return fs.readFileSync(notesPath, "utf-8");
+        const content = fs.readFileSync(notesPath, "utf-8");
+        return lines ? content.split("\n").slice(0, lines).join("\n") : content;
     }
-    /**
-     * Append to notes / 追加筆記
-     */
     appendNotes(taskId, content) {
         const notesPath = this.getNotesPath(taskId);
         if (!fs.existsSync(notesPath))
@@ -222,29 +137,14 @@ class TaskStorage {
         const now = new Date().toISOString();
         const task = this.getTask(taskId);
         const runCount = task ? task.state.runCount + 1 : 1;
-        const entry = `
-
-### ${now} (第${runCount}輪 / Round ${runCount})
-${content}
-`;
-        fs.appendFileSync(notesPath, entry, "utf8");
-        // Update notes size
-        const stats = fs.statSync(notesPath);
-        this.updateTask(taskId, { notesSize: stats.size });
+        fs.appendFileSync(notesPath, `\n### ${now} (Round ${runCount})\n${content}`);
+        this.updateTask(taskId, { notesSize: fs.statSync(notesPath).size });
         return true;
     }
-    /**
-     * Get notes size in bytes / 獲取筆記大小
-     */
     getNotesSize(taskId) {
         const notesPath = this.getNotesPath(taskId);
-        if (!fs.existsSync(notesPath))
-            return 0;
-        return fs.statSync(notesPath).size;
+        return fs.existsSync(notesPath) ? fs.statSync(notesPath).size : 0;
     }
-    /**
-     * Compact notes / 壓縮筆記
-     */
     compactNotes(taskId) {
         const task = this.getTask(taskId);
         if (!task)
@@ -254,44 +154,26 @@ ${content}
             return null;
         const historyDir = path.join(this.tasksDir, "instances", taskId, "history");
         const oldSize = fs.statSync(notesPath).size;
-        // Backup
-        const backupName = `backup_${Date.now()}_${Math.round(oldSize / 1024)}KB.md`;
-        fs.copyFileSync(notesPath, path.join(historyDir, backupName));
-        // Compact: keep first 20 lines (header) + last 3 entries
+        fs.copyFileSync(notesPath, path.join(historyDir, `backup_${Date.now()}_${Math.round(oldSize / 1024)}KB.md`));
         const content = fs.readFileSync(notesPath, "utf-8");
         const lines = content.split("\n");
-        // Find section headers (### YYYY-MM-DD)
+        const headerLines = lines.slice(0, 20);
         const sectionStarts = [];
         for (let i = 0; i < lines.length; i++) {
-            if (lines[i].match(/^### \d{4}-\d{2}-\d{2}/)) {
+            if (lines[i].match(/^### \d{4}-\d{2}-\d{2}/))
                 sectionStarts.push(i);
-            }
         }
-        // Build new content
-        const headerLines = lines.slice(0, 20);
-        const recentSections = sectionStarts.slice(-3);
-        const newLines = [...headerLines];
-        // Add separator
-        newLines.push("", "---", "");
-        newLines.push("*以下為歷史記錄蒸餾版（原始檔案已備份）*", "*Historical records distilled (original backed up)*", "");
-        // Add recent sections
-        for (const start of recentSections) {
-            const section = lines.slice(start, start + 15);
-            newLines.push(...section, "");
+        const newLines = [...headerLines, "", "---", "", "*Historical records distilled (original backed up)*", ""];
+        for (const start of sectionStarts.slice(-3)) {
+            newLines.push(...lines.slice(start, start + 15), "");
         }
-        fs.writeFileSync(notesPath, newLines.join("\n"), "utf8");
-        const newSize = fs.statSync(notesPath).size;
-        return { oldSize, newSize };
+        fs.writeFileSync(notesPath, newLines.join("\n"));
+        return { oldSize, newSize: fs.statSync(notesPath).size };
     }
-    /**
-     * Get available templates / 獲取可用模板
-     */
     getTemplates() {
         if (!fs.existsSync(this.templatesDir))
             return [];
-        return fs
-            .readdirSync(this.templatesDir)
-            .filter((f) => fs.statSync(path.join(this.templatesDir, f)).isDirectory());
+        return fs.readdirSync(this.templatesDir).filter(f => fs.statSync(path.join(this.templatesDir, f)).isDirectory());
     }
 }
 exports.TaskStorage = TaskStorage;

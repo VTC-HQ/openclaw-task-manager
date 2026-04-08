@@ -13,6 +13,18 @@
     "clean": "rm -rf dist",
     "test": "echo \"No tests yet\""
   },
+  "openclaw": {
+    "plugins": {
+        "install": {
+            "type": "npm"
+        }
+    },
+    "extensions": {
+        "cli": {
+            "task": "dist/cli/task.js"
+        }
+    }
+    },
   "keywords": [
     "openclaw",
     "openclaw-plugin",

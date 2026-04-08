@@ -28,7 +28,7 @@ export class TaskStorage {
 
   constructor(
     tasksDir: string = path.join(process.env.HOME || "", ".openclaw", "workspace", "tasks"),
-    templatesDir: string
+    templatesDir: string = path.join(__dirname, "..", "templates")
   ) {
     this.tasksDir = tasksDir;
     this.templatesDir = templatesDir;
@@ -76,16 +76,8 @@ export class TaskStorage {
     fs.mkdirSync(path.join(instanceDir, "history"), { recursive: true });
     const now = new Date().toISOString();
     const config: TaskConfig = {
-      taskId,
-      template,
-      name,
-      status: "created",
-      cronJobId: "",
-      agent,
-      schedule,
-      createdAt: now,
-      updatedAt: now,
-      notesSize: 0,
+      taskId, template, name, status: "created", cronJobId: "", agent, schedule,
+      createdAt: now, updatedAt: now, notesSize: 0,
       state: { phase: "initialized", lastRun: null, lastResult: null, runCount: 0, consecutiveFailures: 0 },
     };
     fs.writeFileSync(path.join(instanceDir, "config.json"), JSON.stringify(config, null, 2));
@@ -96,7 +88,7 @@ export class TaskStorage {
       const promptFile = path.join(templateDir, "prompt_template.md");
       if (fs.existsSync(promptFile)) fs.copyFileSync(promptFile, path.join(instanceDir, "prompt.md"));
     }
-    const notesContent = `# 任務：${name}\n# Task ID: ${taskId}\n# 建立時間: ${now}\n\n## 任務目標\n初始化中...\n\n## 初始化日誌\n- ${now}: 任務建立\n- 模板: ${template}\n- 排程: ${schedule}\n\n---\n\n（每次執行後記錄）\n`;
+    const notesContent = `# Task: ${name}\n# ID: ${taskId}\n# Created: ${now}\n\n## Goal\nInitializing...\n\n## Log\n- ${now}: Task created\n- Template: ${template}\n\n---\n(Record progress after each execution)\n`;
     fs.writeFileSync(path.join(instanceDir, "思考筆記.md"), notesContent);
     return config;
   }
@@ -137,7 +129,7 @@ export class TaskStorage {
     const now = new Date().toISOString();
     const task = this.getTask(taskId);
     const runCount = task ? task.state.runCount + 1 : 1;
-    fs.appendFileSync(notesPath, `\n### ${now} (第${runCount}輪)\n${content}`);
+    fs.appendFileSync(notesPath, `\n### ${now} (Round ${runCount})\n${content}`);
     this.updateTask(taskId, { notesSize: fs.statSync(notesPath).size });
     return true;
   }
@@ -162,7 +154,7 @@ export class TaskStorage {
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].match(/^### \d{4}-\d{2}-\d{2}/)) sectionStarts.push(i);
     }
-    const newLines = [...headerLines, "", "---", "", "*歷史記錄蒸餾版（已備份）*", ""];
+    const newLines = [...headerLines, "", "---", "", "*Historical records distilled (original backed up)*", ""];
     for (const start of sectionStarts.slice(-3)) {
       newLines.push(...lines.slice(start, start + 15), "");
     }
@@ -175,3 +167,5 @@ export class TaskStorage {
     return fs.readdirSync(this.templatesDir).filter(f => fs.statSync(path.join(this.templatesDir, f)).isDirectory());
   }
 }
+
+export const storage = new TaskStorage();
