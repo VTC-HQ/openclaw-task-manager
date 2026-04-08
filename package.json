@@ -8,7 +8,7 @@
     "openclaw-task": "dist/cli/task.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/templates dist/templates",
     "prepublish": "npm run build",
     "clean": "rm -rf dist",
     "test": "node dist/cli/task.js list",
@@ -43,6 +43,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "better-sqlite3": "^11.0.0",
     "uuid": "^9.0.0"
   }
 }

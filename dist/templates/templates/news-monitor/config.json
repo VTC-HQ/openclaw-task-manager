@@ -1,0 +1,12 @@
+{
+  "template": "news-monitor",
+  "description": "Monitor news for specific topics",
+  "defaultSchedule": "0 */4 * * *",
+  "defaultAgent": "main",
+  "phases": ["monitoring", "analyzing", "alerting"],
+  "rules": {
+    "maxConsecutiveFailures": 3,
+    "compactThreshold": 15000,
+    "retentionRounds": 3
+  }
+}
