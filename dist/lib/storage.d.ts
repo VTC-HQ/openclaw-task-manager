@@ -40,4 +40,3 @@ export declare class TaskStorage {
     getTemplates(): string[];
 }
 export declare const storage: TaskStorage;
-//# sourceMappingURL=storage.d.ts.map
