@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+
+# Source files (we publish compiled JS)
+src/
+
+# Git
+.github/
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+
+# CI/CD workflows (not needed in npm)
+.github/
+
+# Documentation (only publish essential README)
+# NOTE: README.md and LICENSE.md are published
+
+# Development
+.env
+.env.*
+docker-compose.yml
+
+# Release drafter
+release-drafter.yml
+
+# Dependabot
+dependabot.yml

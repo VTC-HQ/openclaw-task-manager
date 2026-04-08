@@ -1,0 +1,11 @@
+# Code Owners - 自動分配 Reviewers
+# 當有 PR 或 push 到以下檔案時，自動通知
+
+# 預設所有檔案由以下人員審查
+* @VTC-HQ/maintainers
+
+# 特殊規則
+/.github/workflows/ @VTC-HQ/devops
+/src/lib/ @VTC-HQ/core
+/src/cli/ @VTC-HQ/core
+/src/templates/ @VTC-HQ/templates

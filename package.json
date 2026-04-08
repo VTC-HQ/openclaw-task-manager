@@ -8,7 +8,7 @@
     "openclaw-task": "dist/cli/task.js"
   },
   "scripts": {
-    "build": "tsc && cp -r src/templates dist/templates",
+    "build": "tsc && mkdir -p dist/templates && cp -r src/templates/* dist/templates/",
     "prepublish": "npm run build",
     "clean": "rm -rf dist",
     "test": "node dist/cli/task.js list",
