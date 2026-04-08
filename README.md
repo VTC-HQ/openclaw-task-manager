@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/VTC-HQ/openclaw-task-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/VTC-HQ/openclaw-task-manager/actions/workflows/ci.yml)
 [![Release](https://github.com/VTC-HQ/openclaw-task-manager/actions/workflows/release.yml/badge.svg)](https://github.com/VTC-HQ/openclaw-task-manager/actions/workflows/release.yml)
-[![NPM Version](https://img.shields.io/npm/v/@VTC-HQ/openclaw-task-manager)](https://www.npmjs.com/package/@VTC-HQ/openclaw-task-manager)
+[![NPM Version](https://img.shields.io/npm/v/@venturet/openclaw-task-manager)](https://www.npmjs.com/package/@venturet/openclaw-task-manager)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 [English](#english) | [中文](#中文)
@@ -29,7 +29,7 @@
 
 ```bash
 # Install via NPM
-npm install -g @VTC-HQ/openclaw-task-manager
+npm install -g @venturet/openclaw-task-manager
 
 # Or use directly
 openclaw-task create --template news-monitor --name "Bitcoin News" --schedule "0 */4 * * *"
@@ -115,7 +115,7 @@ npm publish --access public
 ### 安裝
 
 ```bash
-npm install -g @VTC-HQ/openclaw-task-manager
+npm install -g @venturet/openclaw-task-manager
 ```
 
 ### CLI 使用
