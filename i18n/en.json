@@ -1,0 +1,92 @@
+{
+  "plugin": {
+    "name": "Task Manager",
+    "description": "Automated task management system"
+  },
+  "commands": {
+    "create": {
+      "usage": "openclaw task create --template <template> --name <name> --schedule <cron>",
+      "example": "openclaw task create --template news-monitor --name \"Bitcoin News\" --schedule \"0 */4 * * *\"",
+      "options": {
+        "template": "Task template (news-monitor, system-health, daily-brief)",
+        "name": "Task name",
+        "schedule": "Cron expression",
+        "agent": "Agent to use (default: main)"
+      }
+    },
+    "list": {
+      "usage": "openclaw task list",
+      "description": "List all tasks"
+    },
+    "status": {
+      "usage": "openclaw task status <task-id>",
+      "description": "Show task status"
+    },
+    "notes": {
+      "usage": "openclaw task notes <task-id> [lines]",
+      "description": "View task thinking notes"
+    },
+    "pause": {
+      "usage": "openclaw task pause <task-id>",
+      "description": "Pause a task"
+    },
+    "resume": {
+      "usage": "openclaw task resume <task-id>",
+      "description": "Resume a task"
+    },
+    "delete": {
+      "usage": "openclaw task delete <task-id> [--force]",
+      "description": "Delete a task"
+    },
+    "compact": {
+      "usage": "openclaw task compact <task-id>",
+      "description": "Compact thinking notes"
+    }
+  },
+  "status": {
+    "created": "Created",
+    "scheduled": "Scheduled",
+    "running": "Running",
+    "paused": "Paused",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "phases": {
+    "initialized": "Initialized",
+    "monitoring": "Monitoring",
+    "analyzing": "Analyzing",
+    "alerting": "Alerting",
+    "checking": "Checking",
+    "healthy": "Healthy",
+    "warning": "Warning",
+    "critical": "Critical",
+    "collecting": "Collecting",
+    "drafting": "Drafting",
+    "delivering": "Delivering"
+  },
+  "messages": {
+    "task_created": "Task created successfully",
+    "task_deleted": "Task deleted",
+    "task_paused": "Task paused",
+    "task_resumed": "Task resumed",
+    "notes_compacted": "Notes compacted",
+    "no_tasks": "No tasks found",
+    "task_not_found": "Task not found",
+    "template_not_found": "Template not found",
+    "invalid_cron": "Invalid cron expression"
+  },
+  "templates": {
+    "news-monitor": {
+      "name": "News Monitor",
+      "description": "Monitor news for specific topics"
+    },
+    "system-health": {
+      "name": "System Health",
+      "description": "System health check and monitoring"
+    },
+    "daily-brief": {
+      "name": "Daily Brief",
+      "description": "Generate daily briefing reports"
+    }
+  }
+}

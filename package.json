@@ -1,0 +1,41 @@
+{
+  "name": "openclaw-task-manager",
+  "version": "1.0.0",
+  "description": "OpenClaw Task Manager Plugin / OpenClaw 任務管理插件",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "openclaw-task": "dist/cli/task.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublish": "npm run build",
+    "clean": "rm -rf dist",
+    "test": "echo \"No tests yet\""
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "automation",
+    "cron",
+    "task-manager"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/USER/openclaw-task-manager"
+  },
+  "engines": {
+    "openclaw": ">=2026.4.0"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "plugin": {
+    "name": "任務管理器",
+    "description": "自動化任務管理系統"
+  },
+  "commands": {
+    "create": {
+      "usage": "openclaw task create --template <模板> --name <名稱> --schedule <排程>",
+      "example": "openclaw task create --template news-monitor --name \"比特幣新聞\" --schedule \"0 */4 * * *\"",
+      "options": {
+        "template": "任務模板 (news-monitor, system-health, daily-brief)",
+        "name": "任務名稱",
+        "schedule": "Cron 表達式",
+        "agent": "使用的代理 (預設: main)"
+      }
+    },
+    "list": {
+      "usage": "openclaw task list",
+      "description": "列出所有任務"
+    },
+    "status": {
+      "usage": "openclaw task status <任務-ID>",
+      "description": "查看任務狀態"
+    },
+    "notes": {
+      "usage": "openclaw task notes <任務-ID> [行數]",
+      "description": "查看任務思考筆記"
+    },
+    "pause": {
+      "usage": "openclaw task pause <任務-ID>",
+      "description": "暫停任務"
+    },
+    "resume": {
+      "usage": "openclaw task resume <任務-ID>",
+      "description": "恢復任務"
+    },
+    "delete": {
+      "usage": "openclaw task delete <任務-ID> [--force]",
+      "description": "刪除任務"
+    },
+    "compact": {
+      "usage": "openclaw task compact <任務-ID>",
+      "description": "壓縮思考筆記"
+    }
+  },
+  "status": {
+    "created": "已建立",
+    "scheduled": "已排程",
+    "running": "執行中",
+    "paused": "已暫停",
+    "completed": "已完成",
+    "failed": "失敗"
+  },
+  "phases": {
+    "initialized": "初始化",
+    "monitoring": "監控中",
+    "analyzing": "分析中",
+    "alerting": "提醒中",
+    "checking": "檢查中",
+    "healthy": "健康",
+    "warning": "警告",
+    "critical": "嚴重",
+    "collecting": "收集中",
+    "drafting": "撰寫中",
+    "delivering": "發送中"
+  },
+  "messages": {
+    "task_created": "任務建立成功",
+    "task_deleted": "任務已刪除",
+    "task_paused": "任務已暫停",
+    "task_resumed": "任務已恢復",
+    "notes_compacted": "筆記已壓縮",
+    "no_tasks": "目前沒有任務",
+    "task_not_found": "找不到任務",
+    "template_not_found": "找不到模板",
+    "invalid_cron": "無效的 Cron 表達式"
+  },
+  "templates": {
+    "news-monitor": {
+      "name": "新聞監控",
+      "description": "監控特定主題的新聞資訊"
+    },
+    "system-health": {
+      "name": "系統健康檢查",
+      "description": "系統健康檢查和監控"
+    },
+    "daily-brief": {
+      "name": "每日簡報",
+      "description": "生成每日簡報報告"
+    }
+  }
+}

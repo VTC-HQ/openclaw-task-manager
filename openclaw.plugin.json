@@ -1,0 +1,33 @@
+{
+  "id": "task-manager",
+  "name": "Task Manager",
+  "name_zh": "任務管理器",
+  "description": "Automated task management system with Cron Jobs, thinking notes, and state tracking",
+  "description_zh": "自動化任務管理系統 - 支援 Cron Job、思考筆記、狀態追蹤",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/USER/openclaw-task-manager"
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "automation",
+    "cron",
+    "task-manager"
+  ],
+  "openclaw": {
+    "plugins": {
+      "install": {
+        "type": "npm"
+      }
+    }
+  },
+  "i18n": {
+    "supported": ["en", "zh"],
+    "default": "zh"
+  }
+}
