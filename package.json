@@ -27,9 +27,7 @@
       }
     },
     "extensions": {
-      "cli": {
-        "task": "dist/cli/task.js"
-      }
+      "./dist/index.js": {}
     }
   },
   "peerDependencies": {
