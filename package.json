@@ -1,5 +1,5 @@
 {
-  "name": "openclaw-task-manager",
+  "name": "@venturet/openclaw-task-manager",
   "version": "1.0.0",
   "description": "OpenClaw Task Manager Plugin / OpenClaw 任務管理插件",
   "main": "dist/index.js",
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "@types/uuid": "^10.0.0",
     "typescript": "^5.0.0"
   },
   "dependencies": {

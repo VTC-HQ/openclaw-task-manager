@@ -1,5 +1,5 @@
 {
-  "id": "task-manager",
+  "id": "@venturet/task-manager",
   "name": "Task Manager",
   "name_zh": "任務管理器",
   "description": "Automated task management system with Cron Jobs, thinking notes, and state tracking",
