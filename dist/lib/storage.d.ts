@@ -14,6 +14,7 @@ export interface TaskConfig {
     cronJobId: string;
     agent: string;
     schedule: string;
+    priority: Priority;
     createdAt: string;
     updatedAt: string;
     notesSize: number;
@@ -25,6 +26,9 @@ export interface TaskConfig {
         consecutiveFailures: number;
     };
 }
+export type Priority = "high" | "medium" | "low";
+export declare const PRIORITY_SCHEDULES: Record<Priority, string>;
+export declare const PRIORITY_DESCRIPTIONS: Record<Priority, string>;
 export declare class TaskStorage {
     private tasksDir;
     private templatesDir;
@@ -35,7 +39,7 @@ export declare class TaskStorage {
     private toTaskConfig;
     getAllTasks(): TaskConfig[];
     getTask(taskId: string): TaskConfig | null;
-    createTask(template: string, name: string, schedule: string, agent?: string): TaskConfig;
+    createTask(template: string, name: string, schedule: string, agent?: string, priority?: Priority): TaskConfig;
     updateTask(taskId: string, updates: Partial<TaskConfig>): TaskConfig | null;
     deleteTask(taskId: string): boolean;
     recordRun(taskId: string, status?: string, result?: string, error?: string): string;

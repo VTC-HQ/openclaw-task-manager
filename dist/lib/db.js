@@ -68,12 +68,20 @@ class TaskDB {
         cron_job_id TEXT,
         agent TEXT DEFAULT 'main',
         schedule TEXT,
+        priority TEXT DEFAULT 'low',
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         last_run_at TEXT,
         run_count INTEGER DEFAULT 0
       )
     `);
+        // Migration: Add priority column if not exists
+        try {
+            this.db.exec("ALTER TABLE tasks ADD COLUMN priority TEXT DEFAULT 'low'");
+        }
+        catch (e) {
+            // Column already exists, ignore
+        }
         // Create task_runs table
         this.db.exec(`
       CREATE TABLE IF NOT EXISTS task_runs (
@@ -99,8 +107,8 @@ class TaskDB {
     // Task CRUD
     insertTask(task) {
         const stmt = this.db.prepare(`
-      INSERT INTO tasks (task_id, name, template, status, cron_job_id, agent, schedule, created_at, updated_at, last_run_at, run_count)
-      VALUES (@task_id, @name, @template, @status, @cron_job_id, @agent, @schedule, @created_at, @updated_at, @last_run_at, @run_count)
+      INSERT INTO tasks (task_id, name, template, status, cron_job_id, agent, schedule, priority, created_at, updated_at, last_run_at, run_count)
+      VALUES (@task_id, @name, @template, @status, @cron_job_id, @agent, @schedule, @priority, @created_at, @updated_at, @last_run_at, @run_count)
     `);
         stmt.run(task);
     }

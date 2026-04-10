@@ -40,11 +40,22 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.storage = exports.TaskStorage = void 0;
+exports.storage = exports.TaskStorage = exports.PRIORITY_DESCRIPTIONS = exports.PRIORITY_SCHEDULES = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const uuid_1 = require("uuid");
 const db_1 = require("./db");
+// Priority to Cron Schedule mapping
+exports.PRIORITY_SCHEDULES = {
+    high: "*/10 * * * *", // Every 10 minutes
+    medium: "*/30 * * * *", // Every 30 minutes
+    low: "0 * * * *" // Every 60 minutes
+};
+exports.PRIORITY_DESCRIPTIONS = {
+    high: "每10分鐘執行一次",
+    medium: "每30分鐘執行一次",
+    low: "每60分鐘執行一次"
+};
 class TaskStorage {
     constructor(tasksDir = path.join(process.env.HOME || "", ".openclaw", "workspace", "tasks"), templatesDir = path.join(__dirname, "..", "templates")) {
         this.tasksDir = tasksDir;
@@ -70,6 +81,7 @@ class TaskStorage {
             cronJobId: record.cron_job_id || "",
             agent: record.agent,
             schedule: record.schedule || "",
+            priority: record.priority || "low",
             createdAt: record.created_at,
             updatedAt: record.updated_at,
             notesSize: 0,
@@ -102,7 +114,7 @@ class TaskStorage {
         return this.toTaskConfig(record, { notesSize });
     }
     // Create new task
-    createTask(template, name, schedule, agent = "main") {
+    createTask(template, name, schedule, agent = "main", priority = "low") {
         const taskId = this.generateTaskId();
         const instanceDir = path.join(this.tasksDir, "instances", taskId);
         fs.mkdirSync(instanceDir, { recursive: true });
@@ -117,6 +129,7 @@ class TaskStorage {
             cron_job_id: null,
             agent,
             schedule,
+            priority,
             created_at: now,
             updated_at: now,
             last_run_at: null,

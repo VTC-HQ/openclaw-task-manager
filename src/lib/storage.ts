@@ -19,6 +19,7 @@ export interface TaskConfig {
   cronJobId: string;
   agent: string;
   schedule: string;
+  priority: Priority;  // NEW: high, medium, low
   createdAt: string;
   updatedAt: string;
   notesSize: number;
@@ -30,6 +31,21 @@ export interface TaskConfig {
     consecutiveFailures: number;
   };
 }
+
+export type Priority = "high" | "medium" | "low";
+
+// Priority to Cron Schedule mapping
+export const PRIORITY_SCHEDULES: Record<Priority, string> = {
+  high: "*/10 * * * *",    // Every 10 minutes
+  medium: "*/30 * * * *",  // Every 30 minutes
+  low: "0 * * * *"         // Every 60 minutes
+};
+
+export const PRIORITY_DESCRIPTIONS: Record<Priority, string> = {
+  high: "每10分鐘執行一次",
+  medium: "每30分鐘執行一次",
+  low: "每60分鐘執行一次"
+};
 
 export class TaskStorage {
   private tasksDir: string;
@@ -68,6 +84,7 @@ export class TaskStorage {
       cronJobId: record.cron_job_id || "",
       agent: record.agent,
       schedule: record.schedule || "",
+      priority: (record.priority as Priority) || "low",
       createdAt: record.created_at,
       updatedAt: record.updated_at,
       notesSize: 0,
@@ -104,7 +121,7 @@ export class TaskStorage {
   }
 
   // Create new task
-  createTask(template: string, name: string, schedule: string, agent: string = "main"): TaskConfig {
+  createTask(template: string, name: string, schedule: string, agent: string = "main", priority: Priority = "low"): TaskConfig {
     const taskId = this.generateTaskId();
     const instanceDir = path.join(this.tasksDir, "instances", taskId);
     fs.mkdirSync(instanceDir, { recursive: true });
@@ -121,6 +138,7 @@ export class TaskStorage {
       cron_job_id: null,
       agent,
       schedule,
+      priority,
       created_at: now,
       updated_at: now,
       last_run_at: null,

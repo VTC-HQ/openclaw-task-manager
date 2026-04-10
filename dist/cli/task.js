@@ -79,9 +79,11 @@ function cmdList() {
     }
     for (const task of tasks) {
         const sc = task.status === "running" ? colors.green : task.status === "paused" ? colors.yellow : task.status === "failed" ? colors.red : colors.NC;
+        const pc = task.priority === "high" ? colors.red : task.priority === "medium" ? colors.yellow : colors.green;
         console.log(`  ${colors.blue}ID:${colors.NC} ${task.taskId}`);
         console.log(`  ${colors.blue}Name:${colors.NC} ${task.name}`);
         console.log(`  ${colors.blue}Template:${colors.NC} ${task.template}`);
+        console.log(`  ${colors.blue}Priority:${colors.NC} ${pc}${task.priority}${colors.NC} (${storage_2.PRIORITY_SCHEDULES[task.priority]})`);
         console.log(`  ${colors.blue}Schedule:${colors.NC} ${task.schedule}`);
         console.log(`  ${colors.blue}Runs:${colors.NC} ${task.state.runCount}`);
         console.log(`  ${colors.blue}Status:${colors.NC} ${sc}${task.status}${colors.NC}\n`);
@@ -113,8 +115,10 @@ function cmdStatus(taskId) {
     console.log(`\n${colors.blue}========================================${colors.NC}`);
     console.log(`${colors.blue}  ${task.name}${colors.NC}`);
     console.log(`${colors.blue}========================================${colors.NC}\n`);
+    const pc = task.priority === "high" ? colors.red : task.priority === "medium" ? colors.yellow : colors.green;
     console.log(`  ${colors.blue}ID:${colors.NC} ${task.taskId}`);
     console.log(`  ${colors.blue}Template:${colors.NC} ${task.template}`);
+    console.log(`  ${colors.blue}Priority:${colors.NC} ${pc}${task.priority}${colors.NC}`);
     console.log(`  ${colors.blue}Cron:${colors.NC} ${task.cronJobId || "N/A"}`);
     console.log(`  ${colors.blue}Schedule:${colors.NC} ${task.schedule}`);
     console.log(`  ${colors.blue}Agent:${colors.NC} ${task.agent}`);
@@ -168,14 +172,18 @@ function cmdRuns(taskId, limit) {
         console.log();
     }
 }
-function cmdCreate(template, name, schedule, agent = "main") {
+const storage_2 = require("../lib/storage");
+function cmdCreate(template, name, schedule, agent = "main", priority = "low") {
     const templates = storage_1.storage.getTemplates();
     if (!templates.includes(template)) {
         log.error(`Template not found: ${template}. Available: ${templates.join(", ")}`);
         process.exit(1);
     }
+    // Use priority-based schedule if not explicitly provided
+    const finalSchedule = schedule || storage_2.PRIORITY_SCHEDULES[priority];
     log.info(`Creating task: ${name}`);
-    const task = storage_1.storage.createTask(template, name, schedule, agent);
+    log.info(`Priority: ${priority} (${storage_2.PRIORITY_DESCRIPTIONS[priority]})`);
+    const task = storage_1.storage.createTask(template, name, finalSchedule, agent, priority);
     log.success(`Task ID: ${task.taskId}`);
     // Create Cron Job
     log.info("Creating Cron Job...");
@@ -185,7 +193,7 @@ function cmdCreate(template, name, schedule, agent = "main") {
         const output = openclawCron([
             "cron", "add",
             "--name", `task:${task.taskId}`,
-            "--cron", schedule,
+            "--cron", finalSchedule,
             "--session", "isolated",
             "--agent", agent,
             "--message", cronMessage,
@@ -301,7 +309,7 @@ Examples:
     }
     const cmd = args[0];
     if (cmd === "create") {
-        let template = "", name = "", schedule = "", agent = "main";
+        let template = "", name = "", schedule = "", agent = "main", priority = "low";
         for (let i = 1; i < args.length; i++) {
             if (args[i] === "--template" && args[i + 1])
                 template = args[++i];
@@ -311,12 +319,15 @@ Examples:
                 schedule = args[++i];
             else if (args[i] === "--agent" && args[i + 1])
                 agent = args[++i];
+            else if (args[i] === "--priority" && args[i + 1])
+                priority = args[++i];
         }
-        if (!template || !name || !schedule) {
-            log.error("Missing args: --template, --name, --schedule");
+        if (!template || !name) {
+            log.error("Missing args: --template, --name");
+            console.log("Usage: openclaw-task create --template <tmpl> --name <name> [--schedule <cron>] [--priority high|medium|low] [--agent <agent>]");
             process.exit(1);
         }
-        cmdCreate(template, name, schedule, agent);
+        cmdCreate(template, name, schedule, agent, priority);
     }
     else if (cmd === "list") {
         cmdList();
